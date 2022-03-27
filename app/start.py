@@ -99,14 +99,14 @@ def main():
             # print('main try connect')
             # connect()
             print('main for i in range 100')
-            for i in range(10):
+            for i in range(5):
                 print('main measure ', i)
                 data = measure(adc, imp, rev)
                 print('main measure OK', i)
                 print('main send data ', i, data)
                 sendData(data)
                 print('data send complete ', i)
-                time.sleep(60)
+                time.sleep(5)
                 gc.collect()
             machine.reset()
 
