@@ -13,15 +13,25 @@ file = open('config.json')
 config_datas = ujson.load(file)
 import app.secrets as secrets
 
-uId = config_datas['sensors']['id']
+uId1 = config_datas['sensor1']['id']
 url = secrets.URL
-adc = ADC(Pin(39))
-adc.atten(ADC.ATTN_11DB)
-imp = Pin(26, Pin.OUT)
-imp.off()
-rev = Pin(4, Pin.OUT)
-rev.off()
 
+uId2 = config_datas['sensor2']['id']
+
+
+adc1 = ADC(Pin(39))
+adc1.atten(ADC.ATTN_11DB)
+imp1 = Pin(26, Pin.OUT)
+imp1.off()
+rev1 = Pin(0, Pin.OUT)
+rev1.off()
+
+adc2 = ADC(Pin(36))
+adc2.atten(ADC.ATTN_11DB)
+imp2 = Pin(25, Pin.OUT)
+imp2.off()
+rev2 = Pin(4, Pin.OUT)
+rev2.off()
 
 def average(data_list):
     try:
@@ -50,8 +60,8 @@ def average(data_list):
         return data_list[0]
 
 
-def sendData(data):
-    response_data = urequests.post(url, json={"value": data, "sensor": uId})
+def sendData(data, sensor_uId):
+    response_data = urequests.post(url, json={"value": data, "sensor": sensor_uId})
     if response_data.status_code != 201:
         print(response_data.status_code)
         machine.reset()
@@ -92,21 +102,25 @@ def connect():
 
 
 def main():
+    import gc
     print('main start')
     print('main while True')
     while True:
         try:
-            # print('main try connect')
-            # connect()
             print('main for i in range 100')
-            for i in range(10):
-                print('main measure ', i)
-                data = measure(adc, imp, rev)
-                print('main measure OK', i)
-                print('main send data ', i, data)
-                sendData(data)
-                print('data send complete ', i)
-                time.sleep(60)
+            for i in range(1000):
+                #print('main measure ', i)
+                time.sleep(1)
+                data1 = measure(adc1, imp1, rev1)
+                #print('main measure OK', i)
+                #print('main send data ', i, data)
+                time.sleep(1)
+                sendData(data1, uId1)
+                print('data1 send complete ', i, data1)
+                data2 = measure(adc2, imp2, rev2)
+                sendData(data2, uId2)
+                print('data2 send complete ', i, data2)
+                time.sleep(4)
                 gc.collect()
             machine.reset()
 
@@ -117,3 +131,4 @@ def main():
 
 
 main()
+
