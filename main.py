@@ -1,23 +1,18 @@
+import app.wifimgr as wifimgr
 import ujson
 from app.ota_updater import OTAUpdater
 from machine import Pin
 from time import sleep
+import network, gc
 
 
 def connectToWifiAndUpdate():
-    f = open('config.json')
-    config_data = ujson.load(f)
-    import time, machine, network, gc, app.secrets as secrets
-    time.sleep(1)
     print('Memory free', gc.mem_free())
-
     from app.ota_updater import OTAUpdater
-
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
         print('connecting to network...')
-        sta_if.active(True)
-        sta_if.connect(config_data['wifi']['ssid'], config_data['wifi']['password'])
+        wifimgr.get_connection()
 
         while not sta_if.isconnected():
             pass
@@ -31,12 +26,22 @@ def connectToWifiAndUpdate():
         del (otaUpdater)
 
 
+wlan = wifimgr.get_connection()
+if wlan is None:
+    print("Could not initialize the network connection.")
+    while True:
+        pass  # you shall not pass :D
+
+
 def startApp():
     import app.start
 
 
+# Main Code goes here, wlan is a working network.WLAN(STA_IF) instance.
+print("ESP OK")
 connectToWifiAndUpdate()
 startApp()
+
 
 
 

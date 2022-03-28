@@ -1,16 +1,10 @@
 {
-"wifi": {
-    "ssid": "tn_roof",
-    "password": "tnroof123"
+  "sensor1": {
+    "id": "l000001"
   },
-"sensor1": {"id":"l000001"},
-"sensor2": {"id":"l000002"},
-
-"wifi1": {
-    "ssid": "Keenetic-6399",
-    "password": "DxHGLBwT"
-  },
-
+  "sensor2": {
+    "id": "l000002"
+  }
 }
 
 
