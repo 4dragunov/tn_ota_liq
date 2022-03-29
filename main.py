@@ -3,7 +3,8 @@ import ujson
 from app.ota_updater import OTAUpdater
 from machine import Pin
 from time import sleep
-import network, gc
+import network, gc, machine
+import app.uping as uping
 
 
 def connectToWifiAndUpdate():
@@ -11,6 +12,7 @@ def connectToWifiAndUpdate():
     from app.ota_updater import OTAUpdater
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
+
         print('connecting to network...')
         wifimgr.get_connection()
 
@@ -39,8 +41,12 @@ def startApp():
 
 # Main Code goes here, wlan is a working network.WLAN(STA_IF) instance.
 print("ESP OK")
+
 connectToWifiAndUpdate()
 startApp()
+
+
+
 
 
 

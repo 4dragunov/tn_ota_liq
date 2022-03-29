@@ -36,7 +36,9 @@ def get_connection():
         wlan_sta.active(True)
         networks = wlan_sta.scan()
 
-        AUTHMODE = {0: "open", 1: "WEP", 2: "WPA-PSK", 3: "WPA2-PSK", 4: "WPA/WPA2-PSK"}
+        #AUTHMODE = {0: "open", 1: "WEP", 2: "WPA-PSK", 3: "WPA2-PSK", 4: "WPA/WPA2-PSK"}
+        AUTHMODE = {1: "WEP", 2: "WPA-PSK", 3: "WPA2-PSK", 4: "WPA/WPA2-PSK"}
+
         for ssid, bssid, channel, rssi, authmode, hidden in sorted(networks, key=lambda x: x[3], reverse=True):
             ssid = ssid.decode('utf-8')
             encrypted = authmode > 0
@@ -259,6 +261,12 @@ def start(port=80):
     print('Connect to WiFi ssid ' + ap_ssid + ', default password: ' + ap_password)
     print('and access the ESP via your favorite web browser at 192.168.4.1.')
     print('Listening on:', addr)
+    from machine import Timer
+    import machine
+    tim = Timer(1)
+    print('__________________________________________')
+    print('timer start')
+    tim.init(period=300000, mode=Timer.PERIODIC, callback=lambda t:machine.reset())
 
     while True:
         if wlan_sta.isconnected():
@@ -296,4 +304,5 @@ def start(port=80):
 
         finally:
             client.close()
+
 

@@ -1,4 +1,4 @@
-import usocket, os, gc
+import usocket, os, gc, machine
 
 
 class Response:
@@ -81,10 +81,14 @@ class HttpClient:
         if ':' in host:
             host, port = host.split(':', 1)
             port = int(port)
+        try:
+            ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+            if len(ai) < 1:
+                raise ValueError('You are not connected to the internet...')
+        except:
+            print('reboot, you are not connected to the internet...line 89!')
+            machine.reset()
 
-        ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
-        if len(ai) < 1:
-            raise ValueError('You are not connected to the internet...')
         ai = ai[0]
 
         s = usocket.socket(ai[0], ai[1], ai[2])
@@ -155,6 +159,8 @@ class HttpClient:
                     else:
                         raise NotImplementedError("Redirect {} not yet supported".format(status))
         except OSError:
+            print('reboot, you are not connected to the internet...line 162!')
+            machine.reset()
             s.close()
             raise
 
